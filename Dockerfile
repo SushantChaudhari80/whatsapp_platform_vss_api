@@ -1,6 +1,6 @@
 FROM node:18-slim
 
-# Install Chromium dependencies
+# Install Chromium dependencies including libgbm1
 RUN apt-get update && apt-get install -y \
     wget \
     ca-certificates \
@@ -26,20 +26,19 @@ RUN apt-get update && apt-get install -y \
     libvulkan1 \
     libgbm1 \
     --no-install-recommends \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
 
-# Set work directory
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and install dependencies
+# Copy files
 COPY package*.json ./
 RUN npm install
-
-# Copy project files
 COPY . .
 
-# Expose port
+# Expose app port
 EXPOSE 3000
 
-# Start the app
+# Run app
 CMD ["npm", "start"]
