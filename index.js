@@ -6,10 +6,18 @@ const app = express();
 app.use(express.json());
 
 // Initialize WhatsApp client
+// const client = new Client({
+//     authStrategy: new LocalAuth(), // Saves session
+//     puppeteer: { headless: true }
+// });
 const client = new Client({
-    authStrategy: new LocalAuth(), // Saves session
-    puppeteer: { headless: true }
+    authStrategy: new LocalAuth(),
+    puppeteer: {
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+    }
 });
+
 
 // Show QR in terminal
 client.on('qr', qr => {
