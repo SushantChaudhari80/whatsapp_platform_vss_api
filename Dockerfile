@@ -1,7 +1,6 @@
-# Use official Node.js image
 FROM node:18-slim
 
-# Install Chromium dependencies
+# Install required Chromium dependencies
 RUN apt-get update && apt-get install -y \
     wget \
     ca-certificates \
@@ -12,6 +11,7 @@ RUN apt-get update && apt-get install -y \
     libatk1.0-0 \
     libcups2 \
     libdbus-1-3 \
+    libdrm2 \
     libgdk-pixbuf2.0-0 \
     libnspr4 \
     libnss3 \
@@ -19,21 +19,26 @@ RUN apt-get update && apt-get install -y \
     libxcomposite1 \
     libxdamage1 \
     libxrandr2 \
+    libxext6 \
+    libxfixes3 \
     xdg-utils \
     libu2f-udev \
     libvulkan1 \
     --no-install-recommends \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Create app directory
+# Set work directory
 WORKDIR /app
 
-# Copy and install app
+# Copy package.json and install dependencies
 COPY package*.json ./
 RUN npm install
 
+# Copy the entire project
 COPY . .
 
-# Expose port and start app
+# Expose app port
 EXPOSE 3000
-CMD [ "node", "index.js" ]
+
+# Run the app
+CMD ["node", "index.js"]
