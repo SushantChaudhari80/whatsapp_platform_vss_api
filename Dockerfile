@@ -1,6 +1,6 @@
 FROM node:18-slim
 
-# Install required Chromium dependencies
+# Install Chromium dependencies
 RUN apt-get update && apt-get install -y \
     wget \
     ca-certificates \
@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y \
     xdg-utils \
     libu2f-udev \
     libvulkan1 \
+    libgbm1 \
     --no-install-recommends \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -34,11 +35,11 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
-# Copy the entire project
+# Copy project files
 COPY . .
 
-# Expose app port
+# Expose port
 EXPOSE 3000
 
-# Run the app
-CMD ["node", "index.js"]
+# Start the app
+CMD ["npm", "start"]
