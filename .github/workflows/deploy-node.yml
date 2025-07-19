@@ -1,0 +1,40 @@
+name: Deploy Node.js App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Upload project to server
+      uses: appleboy/scp-action@master
+      with:
+        host: 103.91.187.228
+        username: root
+        port: 2244
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        source: "."              # Upload all files
+        target: "/opt/apps/nodejs-app"   # Change path for each app
+
+    - name: SSH and deploy container
+      uses: appleboy/ssh-action@master
+      with:
+        host: 103.91.187.228
+        username: root
+        port: 2244
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          cd /opt/apps/nodejs-app
+          docker stop node-app || true
+          docker rm node-app || true
+          docker rmi node-app-image || true
+          docker build -t node-app-image .
+          docker run -d -p 3000:3000 --name node-app node-app-image
+          echo "Deployment completed successfully!" 
