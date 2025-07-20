@@ -36,5 +36,5 @@ jobs:
           docker rm node-app || true
           docker rmi node-app-image || true
           docker build -t node-app-image .
-          docker run -d -p 3000:3000 --name node-app node-app-image
+          docker run -d -p 3333:3333 --name node-app node-app-image
           echo "Deployment completed successfully!" 
