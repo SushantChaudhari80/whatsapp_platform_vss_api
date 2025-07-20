@@ -21,22 +21,25 @@ RUN apt-get update && apt-get install -y \
     libxrandr2 \
     libu2f-udev \
     libvulkan1 \
-    libdrm2 \             # ✅ Important
+    libdrm2 \
     libxshmfence1 \
-    libgbm1 \             # ✅ Helps for headless Chromium rendering
+    libgbm1 \
     xdg-utils \
     --no-install-recommends && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Create app directory
+# Set working directory
 WORKDIR /app
 
-# Copy and install app
+# Install app dependencies
 COPY package*.json ./
 RUN npm install
 
+# Copy app source
 COPY . .
 
-# Expose port and start app
+# Expose port
 EXPOSE 3333
-CMD [ "node", "index.js" ]
+
+# Start app
+CMD ["node", "index.js"]
