@@ -19,11 +19,14 @@ RUN apt-get update && apt-get install -y \
     libxcomposite1 \
     libxdamage1 \
     libxrandr2 \
-    xdg-utils \
     libu2f-udev \
     libvulkan1 \
-    --no-install-recommends \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    libdrm2 \             # ✅ Important
+    libxshmfence1 \
+    libgbm1 \             # ✅ Helps for headless Chromium rendering
+    xdg-utils \
+    --no-install-recommends && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Create app directory
 WORKDIR /app
